@@ -7,14 +7,17 @@ import (
 )
 
 func Login(c *fiber.Ctx) error {
-	// PARSES FORM DATA
+	// PARSE FORM DATA
 	var u models.User
 	err := c.BodyParser(&u)
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot parse JSON",
+			"body":  string(c.Body()),
+		})
 	}
 
-	// CHECKS IF EMAIL IS IN DATABASE
+	// CHECK IF EMAIL IS IN DATABASE
 	var existingUser models.User
 	database.DB.Where("email = ?", u.Email).First(&existingUser)
 	if existingUser.ID == 0 {
@@ -22,6 +25,8 @@ func Login(c *fiber.Ctx) error {
 			"error": "User with this email doesn't exist",
 		})
 	}
+
+	// CHECK IF USER CREDENTIALS MATCHES WITH THE DB
 	var DBUser models.User
 	database.DB.Where("email = ?", u.Email).First(&DBUser)
 	if (u.Email == DBUser.Email) && (u.Password == DBUser.Password) {
@@ -36,17 +41,17 @@ func Login(c *fiber.Ctx) error {
 }
 
 func Register(c *fiber.Ctx) error {
-	// PARSES FORM DATA
+	// PARSE FORM DATA
 	var u models.User
 	err := c.BodyParser(&u)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Cannot parse JSON",
-			"user":  string(c.Body()),
+			"body":  string(c.Body()),
 		})
 	}
 
-	// CHECKS IF USER EXISTS
+	// CHECK IF USER EXISTS
 	var existingUser models.User
 	database.DB.Where("email = ?", u.Email).First(&existingUser)
 	if existingUser.ID != 0 {
@@ -55,7 +60,7 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	// CREATES THE USER
+	// CREATE THE USER
 	err = database.DB.Create(&u).Error
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

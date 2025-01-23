@@ -26,24 +26,19 @@ func main() {
 
 	// ROUTES
 
-	// micro.Route("/welcome/:user", func(router fiber.Router) {
-	// 	router.Post("/", controllers.CreateNoteHandler)
-	// 	router.Get("", controllers.Welcome)
-	// })
+	micro.Route("/tasks", func(router fiber.Router) {
+		// GET ALL TASKS
+		router.Get("", controllers.GetTasks)
+		// ADD TASK
+		router.Post("", controllers.CreateTask)
+	})
 
-	// micro.Route("/tasks", func(router fiber.Router) {
-	// 	// GET ALL TASKS
-	// 	router.Get("")
-	// 	// ADD TASK
-	// 	router.Post("")
-	// })
-
-	// micro.Route("/tasks/:id", func(router fiber.Router) {
-	// 	// EDIT TASK
-	// 	router.Put("")
-	// 	// DELETE TASK
-	// 	router.Delete("")
-	// })
+	micro.Route("/tasks/:id", func(router fiber.Router) {
+		// EDIT TASK
+		router.Put("", controllers.EditTask)
+		// DELETE TASK
+		router.Delete("", controllers.DeleteTask)
+	})
 
 	micro.Route("/users/signup", func(router fiber.Router) {
 		// ADD USER
