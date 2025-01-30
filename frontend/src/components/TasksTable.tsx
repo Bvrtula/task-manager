@@ -7,8 +7,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useEffect, useState } from "react"
 import { Checkbox } from "./ui/checkbox"
+import { Button } from "./ui/button"
 interface Task {
     ID: number
     title: string
@@ -17,39 +17,13 @@ interface Task {
     priority: string
     category: string
 }
-  
-export function TasksTable() {
-    const [tasks, setTasks] = useState<Task[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
-    // fetch api data
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/tasks')
-        .then((response) => {
-            if(!response.ok) {
-                throw new Error('Network response was not ok')
-            }
-            return response.json()
-        })
-        .then((data) => {
-            setTasks(data)
-            setLoading(false)
-        })
-        .catch((error) => {
-            setError(error.message)
-            setLoading(false)
-        })
-    }, [])
+interface TasksTableProps {
+  tasks: Task[]
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+}
 
-    if (loading) {
-        return <div>Loading...</div>
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
+export function TasksTable({ tasks, setTasks }: TasksTableProps) {
     return (
       <Table>
         <TableCaption>A list of your tasks.</TableCaption>
@@ -61,6 +35,7 @@ export function TasksTable() {
             <TableHead>Deadline</TableHead>
             <TableHead>Priority</TableHead>
             <TableHead>Category</TableHead>
+            <TableHead className="flex justify-center items-center">Delete</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -72,9 +47,13 @@ export function TasksTable() {
               <TableCell>{task.deadline}</TableCell>
               <TableCell>{task.priority}</TableCell>
               <TableCell>{task.category}</TableCell>
+              <TableCell className="flex justify-center items-center"><Checkbox /></TableCell>
             </TableRow>
           ))}
         </TableBody>
+        <div className="">
+          <Button>Delete</Button>
+        </div>
       </Table>
     )
   }
