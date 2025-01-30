@@ -25,7 +25,6 @@ func main() {
 	}))
 
 	// ROUTES
-
 	micro.Route("/tasks", func(router fiber.Router) {
 		// GET ALL TASKS
 		router.Get("", controllers.GetTasks)
