@@ -42,8 +42,9 @@ const Login = () => {
   }
 
 return (
-  <main className="flex justify-center my-11">
-    <form onSubmit={handleSubmit(onSubmit)} className="w-1/5">
+  <main className="grid items-center mx-auto w-1/4 my-11">
+    <p className="text-5xl font-bold letter p-2">Login</p>
+    <form onSubmit={handleSubmit(onSubmit)}>
 
       <div>
         <Label htmlFor="email">Email</Label>
