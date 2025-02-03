@@ -20,8 +20,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar"
-import { SubmitHandler, useForm } from "react-hook-form"
-
+import { SubmitHandler, useForm, Controller } from "react-hook-form"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"  
 import { useState, useEffect } from "react";
 type FormFields = {
     title: string
@@ -60,7 +67,7 @@ const Tasks = () => {
             })
         }, [tasks])
 
-        const { register, reset,handleSubmit, setValue, clearErrors, setError, formState: { errors, isSubmitting } } = useForm<FormFields>();
+        const { register, reset,handleSubmit, setValue, clearErrors, setError, formState: { errors, isSubmitting }, control } = useForm<FormFields>();
         const onSubmit: SubmitHandler<FormFields> = async (formData) => {
             try {
                 if (!date) {
@@ -166,9 +173,21 @@ const Tasks = () => {
 
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="priority" className="text-right">Priority</Label>
-                                <Input id="priority" className="col-span-3" {...register("priority", {
-                                    required: "Priority is required"
-                                })} />
+                                <Controller name="priority" control={control} rules={{required: "Priority is required"}} render={({field}) => 
+                                    <Select onValueChange={field.onChange} defaultValue="low">
+                                    <SelectTrigger className="w-[250px]">
+                                        <SelectValue placeholder="Select a priority" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                        <SelectItem value="low">Low</SelectItem>
+                                        <SelectItem value="medium">Medium</SelectItem>
+                                        <SelectItem value="high">High</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                    </Select>
+                                }>
+                                </Controller>
                             </div>
                                 {errors.priority && (
                                     <p className='text-red-500 text-right'>{errors.priority.message}</p>
@@ -198,7 +217,7 @@ const Tasks = () => {
             </header>
             <hr className='mt-4'/>
             <div>
-                {tasks.length === 0 ? <div>Loading tasks...</div> : <TasksTable tasks={tasks} setTasks={setTasks} />}
+                {tasks.length === 0 ? <div>Waiting for tasks...</div> : <TasksTable tasks={tasks} setTasks={setTasks} />}
             </div>
         </div>
         <div id='right' className='float-left w-1/6 border-[#09090B] p-12'>
