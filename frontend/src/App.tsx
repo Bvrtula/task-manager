@@ -1,16 +1,12 @@
-import  Login  from './pages/Login'
 import './index.css'
-import Navbar from './components/Navbar'
-import Tasks from './pages/Tasks'
+import AppRouter from './routes/Router'
 
 function App() {
 
 
   return (
     <>
-      <Navbar />
-      {/* <Login /> */}
-      <Tasks />      
+      <AppRouter />     
     </>
   )
 }

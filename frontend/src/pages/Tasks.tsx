@@ -30,6 +30,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"  
 import { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
 type FormFields = {
     title: string
     description: string
@@ -104,6 +105,8 @@ const Tasks = () => {
             }
         };
   return (
+    <>
+    <Navbar />
     <div className='px-36 py-16'>
         <div id='left' className='float-left w-5/6 text-2xl font-semibold p-12'>
             <header className='flex justify-between'>
@@ -224,6 +227,7 @@ const Tasks = () => {
             RIGHT
         </div>
     </div>
+    </>
   )
 }
 
