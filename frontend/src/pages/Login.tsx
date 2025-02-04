@@ -2,6 +2,8 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Navbar from "@/components/Navbar";
+import { redirect } from "react-router-dom";
 type FormFields = {
   firstname: string
   lastname: string
@@ -32,16 +34,20 @@ const Login = () => {
       const result = await response.json();
   
       if (!response.ok) {
-        setError("root", {message: "Login failed"})
+        const errMsg = result.error || "login failed"
+        setError("root", {message: errMsg})
       }
   
       console.log("Login successful:", result);
+      redirect("/tasks")
     } catch (error: any) {
       setError("root", { message: error.message });
     }
   }
 
 return (
+  <>
+  <Navbar />
   <main className="grid items-center mx-auto w-1/4 my-11">
     <p className="text-5xl font-bold letter p-2">Login</p>
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -58,10 +64,10 @@ return (
                 }
                 return true
             }
-        })} type="text" placeholder='email' />
+        })} type="text" placeholder='you@example.com' />
       </div>
         {errors.email && (
-            <p className='text-red-500'>{errors.email.message}</p>
+            <p className='text-red-500 text-sm ml-2'>{errors.email.message}</p>
         )}
 
       <div>
@@ -76,20 +82,27 @@ return (
             },
           })} 
           type="password" 
-          placeholder='password' 
+          placeholder='1234' 
           />
       </div>
         {errors.password && (
-            <p className='text-red-500'>{errors.password.message}</p>
+            <p className='text-red-500 text-sm ml-2'>{errors.password.message}</p>
         )}
         {errors.root && (
-            <p className='text-red-500'>{errors.root.message}</p>
+            <p className='text-red-500 text-sm ml-2'>{errors.root.message}</p>
         )}
+        <div className="flex gap-2">
+            <p className="text-sm ml-2">You don't have an account?</p>
+            <a  href="/register" className="text-blue-500 text-sm">
+              Create one here
+            </a>
+          </div>
         <Button disabled={isSubmitting} className='m-2 bg-white text-black hover:text-white'>
             {isSubmitting ? "Submiting..." : "Submit"}
         </Button>
     </form>
   </main>
+  </>
 
 )
 }
